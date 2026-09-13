@@ -1,0 +1,284 @@
+---@meta
+---
+--- classes / extra
+---
+--- Generated from the Cheat Engine source; every declaration carries a @source link.
+---
+--- Part of the Cheat Engine LuaLS definitions. Every file under `types/` shares one
+--- namespace, so declarations here may refer to types declared in any other file.
+
+---------------------------------------------------------------------------------------
+-- Classes without metadata of their own
+--
+-- Cheat Engine walks the Pascal class chain when it builds a metatable, so these types
+-- get the metadata of their nearest registered ancestor. They are declared separately
+-- only to keep the return types that name them precise.
+---------------------------------------------------------------------------------------
+
+--- `TMainForm` (MainUnit.pas), the main Cheat Engine window.
+---@class MainForm : CustomForm
+---@field Progressbar1 ProgressBar Published property, reached through the RTTI fallback; the main window's progress bar.
+---@field About1 MenuItem Published property; the About menu item (`miAbout`).
+---@field Help1 MenuItem Published property; the Help menu item (`miHelp`).
+---@field OnProcessOpened CECallback Called after Cheat Engine opens a process: `function(processid, handle, caption)` (LuaCaller.pas:3547).
+---@field UseThreadToFreeze boolean Published property of `TMainForm`, reached through the RTTI fallback. True while the freeze thread exists; setting it true starts that thread and disables the freeze timer, false frees it and re-enables the timer.
+---@field btnNextScan Button Read-only. The Next Scan button; `Enabled` is false until a first scan has run. A form-designer component of `TMainForm` (MainUnit.pas:507), not a published property; streamed by MainUnit.lfm:609 and reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field btnNewScan Button Read-only. The First Scan / New Scan button. A form-designer component of `TMainForm` (MainUnit.pas:506), not a published property; streamed by MainUnit.lfm:264 and reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field VarType ComboBox Read-only. The value-type combo box. A form-designer component of `TMainForm` (MainUnit.pas:509), not a published property; streamed by MainUnit.lfm:659 and reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field ScanType ComboBox Read-only. The scan-type combo box. A form-designer component of `TMainForm` (MainUnit.pas:508), not a published property; streamed by MainUnit.lfm:626 and reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field scanvalue Edit Read-only. The main scan-value edit box. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:512, streamed by MainUnit.lfm:730), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). The name match is case-insensitive: Cheat Engine's own scripts spell it `MainForm.ScanValue` (bin/autorun/babyce.lua:366).
+---@field Panel5 Panel Read-only. The main window's top panel (`Align = alTop`, MainUnit.lfm:106), spanning the full client width (MainUnit.lfm:105 `Width = 734`, the form's `ClientWidth` at MainUnit.lfm:14) and holding the whole scan UI - the value and scan-type combo boxes, the scan buttons, `gbScanOptions`, `scanvalue`, `Foundlist3` and `LogoPanel`. The usual parent for controls added to the main window. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:494, streamed by MainUnit.lfm:101), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field Foundlist3 ListView Read-only. The scan-results list. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:369, streamed by MainUnit.lfm:1641), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). The name match is case-insensitive: Cheat Engine's own scripts spell it `MainForm.FoundList3` (bin/autorun/babyce.lua:21).
+---@field miAbout MenuItem Read-only. The same About item as `About1`, reached by the component's own name rather than by the published alias (`property About1: TMenuItem read miAbout write miAbout;`, MainUnit.pas:1096). A form-designer component of `TMainForm` sitting inside `miHelp` (MainUnit.pas:556, streamed by MainUnit.lfm:2704 under MainUnit.lfm:2651), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/versioncheck.lua:133` reads its `MenuIndex` to insert an item in front of it.
+---@field miHelp MenuItem Read-only. The same Help menu as `Help1`, reached by the component's own name rather than by the published alias (`property Help1: TMenuItem read miHelp write miHelp;`, MainUnit.pas:1097). A form-designer component of `TMainForm` (MainUnit.pas:554, streamed by MainUnit.lfm:2651), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own scripts spell it this way (bin/autorun/versioncheck.lua:133, bin/autorun/andtools.lua:184).
+---@field miSignTable MenuItem Read-only. The `Sign table` item of the File menu (nested under `File1`, MainUnit.lfm:2293). Visible only on Windows and only when table signing is available (MainUnit.pas:5978). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:354, streamed by MainUnit.lfm:2420), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/savesession.lua:353` copies its `Visible` onto a menu item it adds.
+---@field miForgotScan MenuItem Read-only. The `Forgot to scan` item; clicking it runs a `soForgot` next scan over the current results (`TMainForm.miForgotScanClick`, MainUnit.pas:3956). `foundlistpopupPopup` hides it when the last scan was a region scan or the value type is not a plain numeric one (MainUnit.pas:7638), so test `Visible` before using it. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:347, streamed by MainUnit.lfm:2093), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/babyce.lua:325` tests its `visible` and `enabled` before clicking it at `:331`.
+---@field miAddTab MenuItem Read-only. The `Add tab` item of the File menu (nested under `File1`, MainUnit.lfm:2293). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:448, streamed by MainUnit.lfm:2296), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/splitscanintonewtab.lua:11` clicks it and `bin/autorun/babyce.lua:16` replaces its `OnClick`.
+---@field mfImageList CustomImageList Read-only. The main window's image list, holding the icons its menu items index with `ImageIndex`. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:338, streamed by MainUnit.lfm:2821), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/savesession.lua:327` and `:343` add a bitmap to it to get an image index for a menu item they create.
+---@field foundlistpopup Menu Read-only. The context menu of the scan-results list; `Foundlist3` names it as its `PopupMenu` (MainUnit.lfm:1674). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:513, streamed by MainUnit.lfm:2021), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/babyce.lua:324` calls its `OnPopup` handler directly to refresh the items' visible and enabled state (`TMainForm.foundlistpopupPopup`, MainUnit.pas:7535).
+---@field Panel4 Panel Read-only. The main window's bottom panel (`Align = alBottom`, MainUnit.lfm:56), holding the advanced-options button, the comment button and the table-signed label. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:491, streamed by MainUnit.lfm:51), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/monoscript.lua:707` uses it as the parent for a progress bar.
+---@field andlabel Label Read-only. The `and` label shown between the two scan-value edit boxes during a between-values scan; `TMainForm` shows and hides it with the scan type (MainUnit.pas:2604, MainUnit.pas:2615). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:318, streamed by MainUnit.lfm:1629), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/babyce.lua:417` copies its caption.
+---@field foundcountlabel Label Read-only. The label above the results list showing how many addresses the scan found. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:496, streamed by MainUnit.lfm:125), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/babyce.lua:33` anchors a control to it.
+---@field LogoPanel Panel Read-only. The panel holding the Cheat Engine logo at the top of the main window. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:549, streamed by MainUnit.lfm:797), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/babyce.lua:49` hides it.
+---@field ProgressBar ProgressBar Read-only. The same progress bar as `Progressbar1`, reached by the component's own name rather than the published alias. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:510, streamed by MainUnit.lfm:695), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). The name match is case-insensitive: Cheat Engine's own scripts spell it `MainForm.Progressbar` (bin/autorun/monoscript.lua:1893).
+---@field scanvalue2 Edit Read-only. The second scan-value edit box, shown for between/range scans; the counterpart of `scanvalue`. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:362, streamed by MainUnit.lfm:1599), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). The name match is case-insensitive: Cheat Engine's own scripts spell it `MainForm.ScanValue2` (bin/autorun/babyce.lua:370).
+---@field ToAddress Edit Read-only. The scan stop-address edit box in the `Scan Options` group. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:366, streamed by MainUnit.lfm:415), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/modulelistscan.lua:81` writes its `Text`.
+---@field FromAddress Edit Read-only. The scan start-address edit box in the `Scan Options` group. Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:317, streamed by MainUnit.lfm:431), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/modulelistscan.lua:76` writes its `Text`.
+---@field gbScanOptions GroupBox Read-only. The `Scan Options` group box (start/stop address, fast scan, ...). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:505, streamed by MainUnit.lfm:279), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/modulelistscan.lua:1` uses it as the parent for a control it adds.
+---@field CreateGroup MenuItem Read-only. The `Create Header` item of the address list's popup menu (`addresslist.PopupMenu := popupmenu2`, MainUnit.pas:6349); the item is streamed under `PopupMenu2` at MainUnit.lfm:1977 with `Caption = 'Create Header'`, and `TMainForm.PopupMenu2Popup` makes it visible on every popup (MainUnit.pas:7494). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:316), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/AddToNewGroup.LUA:4` copies its `ImageIndex` and `:5` inserts a new item at its `MenuIndex`.
+---@field ProcessLabel Label Read-only. The label across the top of the main window naming the opened process - `'No Process Selected'` until one is opened (MainUnit.lfm:119), `'<pid>-<name>'` afterwards, which is how Cheat Engine recovers the previous process name from it (MainUnit.pas:3287-3288). Not a published property - a form-designer component of `TMainForm` (MainUnit.pas:495, streamed by MainUnit.lfm:112), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/ultimap2.lua:598` assigns its `OnClick` and clears it again at `:600`.
+
+--- `TMemoryBrowser` (MemoryBrowserFormUnit.pas), the memory viewer window.
+---@class MemoryView : CustomForm
+---@field DisassemblerView DisassemblerView Read-only. Reached by component name (`disassemblerview.name:='DisassemblerView'`, MemoryBrowserFormUnit.pas:2843) through the `component_findComponentByName` fallback in `luaclass_index`.
+---@field HexadecimalView HexadecimalView Read-only. Reached by component name (MemoryBrowserFormUnit.pas:2854) through the same fallback.
+---@field Run1 MenuItem Read-only. Published alias of `miDebugRun`, reached through the RTTI fallback.
+---@field Step1 MenuItem Read-only. Published alias of `miDebugStep`.
+---@field StepOver1 MenuItem Read-only. Published alias of `miDebugStepOver`.
+---@field Executetillreturn1 MenuItem Read-only. Published alias of `miDebugExecuteTillReturn`.
+---@field RunTill1 MenuItem Read-only. Published alias of `miDebugRunTill`.
+---@field miSetAddress MenuItem Read-only. Published alias of `miDebugSetAddress`.
+---@field Setbreakpoint1 MenuItem Read-only. Published alias of `miDebugToggleBreakpoint`.
+---@field Showsymbols1 MenuItem Read-only. Published alias of `miShowSymbols`.
+---@field Kernelmodesymbols1 MenuItem Read-only. Published alias of `miKernelmodeSymbols`.
+---@field Showmoduleaddresses1 MenuItem Read-only. Published alias of `miShowModuleAddresses`.
+---@field Symbolhandler1 MenuItem Read-only. Published alias of `miUserdefinedSymbols`.
+---@field AccessedRegisterColor integer Colour used for registers the halted instruction read.
+---@field ChangedRegisterColor integer Colour used for registers the halted instruction changed.
+---@field CR3 integer
+---@field mvImageList CustomImageList Read-only. The memory viewer's image list, holding the icons its menu items index with `ImageIndex`. Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:77, streamed by MemoryBrowserFormUnit.lfm:2175), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/patchscan.lua:387` and `bin/autorun/pseudocodediagram.lua:806` assign it to a popup menu's `Images`.
+---@field Cut1 MenuItem Read-only. The `Copy to clipboard` item of the hex view's context menu `memorypopup` (MemoryBrowserFormUnit.lfm:769). Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:301, streamed by MemoryBrowserFormUnit.lfm:817), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/copytoclipboardastext.lua:26` reads its `MenuIndex` to insert an item in front of it.
+---@field miSelectCurrentFunction MenuItem Read-only. The `Select current function` item of the disassembler view's context menu (`Caption = 'Select current function'`, MemoryBrowserFormUnit.lfm:1425, nested under `debuggerpopup` at MemoryBrowserFormUnit.lfm:1125, which `disassemblerview.PopupMenu` is set to at MemoryBrowserFormUnit.pas:2839). Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:172, streamed by MemoryBrowserFormUnit.lfm:1424), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/pseudocodediagram.lua:1533` reads its `MenuIndex` to insert an item behind it.
+---@field debuggerpopup Menu Read-only. The context menu of the disassembler view; MemoryBrowserFormUnit.pas:2839 assigns it with `disassemblerview.PopupMenu:=debuggerpopup` and its `OnPopup` handler refreshes the items' state (`TMemoryBrowser.debuggerpopupPopup`, MemoryBrowserFormUnit.pas:4639). Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:196, streamed by MemoryBrowserFormUnit.lfm:1125), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/pseudocodediagram.lua:1533` inserts an item into its `Items` and chains its `OnPopup` at `:1535-1536`.
+---@field DissectPEheaders1 MenuItem Read-only. The `Dissect PE headers` item of the `Tools` menu (`Caption = 'Dissect PE headers'`, MemoryBrowserFormUnit.lfm:1933, nested under `Extra1` at MemoryBrowserFormUnit.lfm:1874). Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:315, streamed by MemoryBrowserFormUnit.lfm:1932), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/patchscan.lua:586` reads its `MenuIndex` to insert an item behind it.
+---@field Extra1 MenuItem Read-only. The `Tools` menu of the memory viewer's main menu (`Caption = 'Tools'`, MemoryBrowserFormUnit.lfm:1875, streamed under `MainMenu1` at MemoryBrowserFormUnit.lfm:1447). Not a published property - a form-designer component of `TMemoryBrowser` (MemoryBrowserFormUnit.pas:254, streamed by MemoryBrowserFormUnit.lfm:1874), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592). Cheat Engine's own `bin/autorun/patchscan.lua:586` inserts a menu item into it.
+
+--- `TDisassemblerview` (disassemblerviewunit.pas).
+---@class DisassemblerView : Panel
+---@field TopAddress integer First address shown.
+---@field SelectedAddress integer
+---@field SelectedAddress2 integer Second address of the selection.
+---@field SelectionSize integer
+---@field ShowJumplines boolean
+---@field ShowJumplineState string|integer Reads back the `TShowjumplineState` member name, `'jlsAll'` or `'jlsOnlyWithinRange'`; assigning takes that name or the matching integer.
+---@field HideFocusRect boolean
+---@field SpaceAboveLines integer
+---@field SpaceBelowLines integer
+---@field jlThickness integer Jumpline thickness.
+---@field jlSpacing integer Jumpline spacing.
+---@field RelativeBase integer
+---@field UseRelativeBase boolean
+---@field CenterOnAddressChangeOutsideView boolean When false an address change outside the view puts that address at the top instead of centering it.
+---@field CR3 integer
+---@field Osb Bitmap Read-only. The offscreen bitmap the view renders into.
+---@field CurrentDisassembler Disassembler Read-only.
+---@field OnSelectionChange CECallback `function(sender, address, address2)`.
+---@field OnExtraLineRender CECallback Called as `f(sender, address, aboveInstruction, selected)` while a line is drawn - twice per line, once with `aboveInstruction` true and once false (disassemblerviewlinesunit.pas:405, :409). `sender` is the `DisassemblerViewLine` being rendered, pushed with `luaclass_newClass` at LuaCaller.pas:570. Return an optional `RasterImage` to draw plus an optional x and y offset for it; `return nil,0,0` is Cheat Engine's own generated template (LuaCaller.pas:3534). The view seeds x and y with the sentinel -1000 (disassemblerviewlinesunit.pas:403-404, :407-408) and each assignment is guarded with `lua_isnil(...)=false` (LuaCaller.pas:578, LuaCaller.pas:581), so omitting x leaves the sentinel and the image is centered horizontally, and omitting y gives it no extra vertical offset (disassemblerviewlinesunit.pas:551-555). The three results are read from absolute stack slots 1, 2 and 3 (LuaCaller.pas:577-582) rather than from the slots `lua_pcall(Luavm, 4,3,0)` (LuaCaller.pas:575) actually wrote, so they line up only when the Lua stack was empty at the time of the call - the same defect `Splitter.OnCanResize` has.
+---@field OnDisassemblerViewOverride CECallback `function(address, addressstring, bytestring, opcodestring, parameterstring, specialstring)`, returning the five strings (LuaCaller.pas:3558).
+---@field OnDblClick CECallback
+---@field OnKeyDown CECallback
+
+--- `THexView` (hexviewunit.pas).
+---@class HexadecimalView : Panel
+---@field Address integer Top address.
+---@field TopAddress integer Same underlying field as `Address`.
+---@field HasSelection boolean Read-only.
+---@field SelectionStart integer
+---@field SelectionStop integer
+---@field DisplayType string|integer Reads back the `TDisplayType` member name; assigning takes that name or the matching integer. Members: `dtByte`, `dtByteDec`, `dtWord`, `dtWordDec`, `dtDword`, `dtDwordDec`, `dtQword`, `dtQwordDec`, `dtSingle`, `dtDouble`, `dtCustom`.
+---@field CustomType CustomType? Nil until one is assigned - `THexView` never sets `fCustomType` itself (declared hexviewunit.pas:106, only read at hexviewunit.pas:524 and hexviewunit.pas:1240); the memory browser assigns it when the display type is switched to a custom type (MemoryBrowserFormUnit.pas:5243), so it is nil on a freshly created view and on any view whose display type was never set that way. Published property of `THexView` (hexviewunit.pas:272) with no `addPropertyToTable` entry, reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494; a `tkClass` property is pushed with `luaclass_newClass` (LuaObject.pas:208), which pushes nil for a nil object (LuaClass.pas:211-217), and assigned from a userdata at LuaObject.pas:291-295.
+---@field CharEncoding string|integer Reads back the `TCharEncoding` member name, `ceAscii`, `ceCodepage`, `ceUtf8` or `ceUtf16`; assigning takes that name or the matching integer.
+---@field BytesPerSeperator integer
+---@field LockedRowSize integer
+---@field spaceBetweenLines integer
+---@field UseRelativeBase boolean
+---@field RelativeBase integer
+---@field CR3 integer
+---@field HexFont Font
+---@field PaintBox PaintBox Read-only. The paintbox the view renders into.
+---@field Osb Bitmap Read-only. Offscreen bitmap.
+---@field OSBitmap Bitmap Read-only. The same offscreen bitmap as `Osb`.
+---@field seperatorColor integer
+---@field cursorcolor integer
+---@field toplinecolor integer
+---@field fadeColor integer
+---@field normalFontColor integer
+---@field normalBackgroundColor integer
+---@field staticFontColor integer
+---@field staticBackgroundColor integer
+---@field highlightedFontColor integer
+---@field highlightedBackgroundColor integer
+---@field editingFontColor integer
+---@field editingBackgroundColor integer
+---@field secondaryeditingFontColor integer
+---@field secondaryeditingBackgroundColor integer
+---@field breakpointFontColor integer
+---@field breakpointBackgroundColor integer
+---@field differentFontColor integer
+---@field differentBackgroundColor integer
+---@field OnAddressChange CECallback `function(hexadecimalview, address)`.
+---@field OnByteSelect CECallback `function(hexadecimalview, address, address2)`.
+---@field OnCharacterRender CECallback `function(sender, address, text)`, returning the text to draw. Called per character; slow.
+---@field OnValueRender CECallback `function(sender, address, text)`, returning the text to draw. Called per value; slow.
+
+--- `TLabel`, the class `createLabel` instantiates (pluginexports.pas:1864). Cheat Engine
+--- also registers `TCELabel` (ceguicomponents.pas:888), a bare `TLabel` descendant, so a
+--- label streamed out of a Cheat Engine form file lands on this same Lua class.
+---
+--- The fields below are LCL published properties of `TLabel`, reached through the
+--- `lua_getProperty` RTTI fallback `luaclass_index` installs at LuaClass.pas:578. The LCL
+--- is not vendored in this repository; both are streamed by Cheat Engine's own forms
+--- (frmSortPointerlistUnit.lfm:22, APIhooktemplatesettingsfrm.lfm:84).
+---@class Label : GraphicControl
+---@field Alignment string|integer Reads back the `TAlignment` member name, `'taLeftJustify'`, `'taRightJustify'` or `'taCenter'`; assigning takes that name or the matching integer.
+---@field WordWrap boolean Wrap the caption over several lines instead of clipping it.
+---@field Transparent boolean Draw the caption without painting the control's background. LCL published property of `TLabel` - the LCL is not vendored here, but frmMemviewPreferencesUnit.lfm:677 streams `Transparent = False` on the `TLabel` declared at frmMemviewPreferencesUnit.lfm:664. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494 (`tkBool`, LuaObject.pas:206).
+---@field Layout string|integer Vertical placement of the caption inside the control. Reads back the `TTextLayout` member name; assigning takes that name or the matching integer (LuaObject.pas:211-215, LuaObject.pas:299-308). LCL published property of `TLabel` - the LCL is not vendored here, but formChangedAddresses.lfm:42 streams `Layout = tlCenter` on the `TLabel` declared at formChangedAddresses.lfm:29 and trainergenerator.lfm:836 streams `Layout = tlBottom` on the one at trainergenerator.lfm:829.
+
+--- `TCESplitter` (ceguicomponents.pas), a `TSplitter`.
+---
+--- The fields below are published properties of `TSplitter`, reached through the
+--- `lua_getProperty` RTTI fallback `luaclass_index` installs at LuaClass.pas:578.
+---@class Splitter : CustomControl
+---@field MinSize integer Smallest size in pixels the splitter will leave the control it resizes. LCL published property of `TSplitter` - the LCL is not vendored here, but MainUnit.lfm:34 streams `MinSize = 50` on the `TSplitter` declared at MainUnit.lfm:25. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494.
+---@field AutoSnap boolean Snap the resized control shut when it would end up smaller than `MinSize`. LCL published property of `TSplitter` - the LCL is not vendored here, but MainUnit.lfm:32 streams `AutoSnap = False` on the `TSplitter` declared at MainUnit.lfm:25 and MemoryBrowserFormUnit.lfm:27 does the same on the one at MemoryBrowserFormUnit.lfm:20. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494 (`tkBool`, LuaObject.pas:206).
+---@field Beveled boolean Draw a bevel on the splitter. LCL published property of `TSplitter` - the LCL is not vendored here, but MainUnit.lfm:33 streams `Beveled = True` on the `TSplitter` declared at MainUnit.lfm:25 and MemoryBrowserFormUnit.lfm:28 does the same on the one at MemoryBrowserFormUnit.lfm:20. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494 (`tkBool`, LuaObject.pas:206).
+---@field ResizeAnchor string|integer Reads back the `TAnchorKind` member name, `'akTop'`, `'akLeft'`, `'akRight'` or `'akBottom'`; assigning takes that name or the matching integer (LuaObject.pas:211-215, LuaObject.pas:299-308). LCL published property of `TSplitter` - the LCL is not vendored here, but MainUnit.lfm:36 streams `ResizeAnchor = akTop` on the `TSplitter` declared at MainUnit.lfm:25 and MemoryBrowserFormUnit.lfm:53 streams `ResizeAnchor = akRight` on the one at MemoryBrowserFormUnit.lfm:46. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494.
+---@field OnMoved CECallback `function(sender)`, called after the splitter has been dragged.
+---@field OnCanResize CECallback Called as `f(sender, newsize)` while the splitter is dragged; return the size to use and whether to accept it, e.g. `return newsize, true` (LuaCaller.pas:1118). Both results are read from absolute stack slots 1 and 2 (LuaCaller.pas:1132-1133) rather than from the top of the stack, so they line up only when the Lua stack was empty at the time of the call. LCL published property of `TSplitter` - the LCL is not vendored here, but MemoryBrowserFormUnit.lfm:30 streams it on the `TSplitter` declared at MemoryBrowserFormUnit.lfm:20, whose handler at MemoryBrowserFormUnit.pas:453 has the matching `(Sender; var NewSize: Integer; var Accept: Boolean)` signature. `TCanResizeEvent` is one of the method types LuaCaller registers (LuaCaller.pas:3506), so a Lua function can be assigned through the `lua_setProperty` RTTI fallback `luaclass_newindex` installs at LuaClass.pas:494.
+
+--- `TPaintBox`.
+---
+--- `OnPaint` is a published property of `TPaintBox`, reached through the `lua_getProperty`
+--- and `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at
+--- LuaClass.pas:578 and LuaClass.pas:494. It is a `TNotifyEvent`, one of the method types
+--- LuaCaller registers (LuaCaller.pas:3491), so a Lua function can be assigned to it.
+---@class PaintBox : GraphicControl
+---@field OnPaint CECallback `function(sender)`. Assign it to draw into the box's `Canvas`. LCL published property of `TPaintBox` - the LCL is not vendored here, but frmSaveSnapshotsUnit.lfm:50 streams `OnPaint = PaintBox1Paint` on the `TPaintBox` declared at frmSaveSnapshotsUnit.lfm:43.
+
+--- `TCEToggleBox` (ceguicomponents.pas), a `TToggleBox`.
+---@class ToggleBox : CheckBox
+
+--- `TColorBox` (ColorBox.pas), a `TCustomComboBox`.
+---
+--- The fields below are published properties of `TColorBox`, the class `createColorBox`
+--- instantiates (LuaHandler.pas:14886), reached through the `lua_getProperty` RTTI
+--- fallback `luaclass_index` installs at LuaClass.pas:578.
+---@class ColorBox : ComboBox
+---@field Selected integer The currently selected colour. LCL published property of `TColorBox` - the LCL is not vendored here, but Cheat Engine reads and writes it on its own colour boxes (frmfoundlistpreferencesunit.pas:154 and :159, frmsyntaxhighlightereditor.pas:64).
+---@field DefaultColorColor integer The colour the `cbIncludeDefault` entry stands for.
+---@field Style string Reads back the `TColorBoxStyle` set as a string, e.g. `'[cbStandardColors,cbExtendedColors,cbSystemColors]'`; assigning takes the same form (`tkSet` in `lua_getProperty`/`lua_setProperty`).
+
+---@class Bitmap : RasterImage
+
+---@class PNG : RasterImage
+
+---@class Jpeg : RasterImage
+
+---@class Icon : RasterImage
+
+--- `TFileStream`.
+---@class FileStream : Stream
+
+--- `TOpenDialog`, built by `createOpenDialog` (LuaHandler.pas:4835-4846) and registered as a Lua
+--- global at LuaHandler.pas:16579. It is never passed to `luaclass_register`, so it carries the
+--- metatable registered for `tfiledialog` (LuaFileDialog.pas:31) and `Options` resolves through
+--- the RTTI fallback.
+---@class OpenDialog : FileDialog
+---@field Options string Dialog flags as a bracketed set string, e.g. `'[ofAllowMultiSelect,ofFileMustExist]'`; assigning takes the same form. Members: `ofReadOnly`, `ofOverwritePrompt`, `ofHideReadOnly`, `ofNoChangeDir`, `ofShowHelp`, `ofNoValidate`, `ofAllowMultiSelect`, `ofExtensionDifferent`, `ofPathMustExist`, `ofFileMustExist`, `ofCreatePrompt`, `ofShareAware`, `ofNoReadOnlyReturn`, `ofNoTestFileCreate`, `ofNoNetworkButton`, `ofNoLongNames`, `ofOldStyleDialog`, `ofNoDereferenceLinks`, `ofEnableIncludeNotify`, `ofEnableSizing`, `ofDontAddToRecent`, `ofForceShowHidden`, `ofViewDetail`, `ofAutoPreview` (celua.txt:1998-2021). `FileDialog.Files` only ever holds more than one name while `ofAllowMultiSelect` is set. LCL published property of `TOpenDialog` - the LCL is not vendored here, but HotKeys.lfm:581 streams `Options = [ofAllowMultiSelect, ofPathMustExist, ofEnableSizing, ofViewDetail]` on the `TOpenDialog` declared at HotKeys.lfm:577, MainUnit.pas:4229 does `f.Options:=f.options+[ofAllowMultiSelect, ofFileMustExist]` on the `TOpendialog` declared at MainUnit.pas:4221, feces.pas:588 does the same on the one created at feces.pas:584, and Cheat Engine documents the property on the OpenDialog class at celua.txt:1995. Reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494 (a tkSet property is read as a bracketed set string at LuaObject.pas:210 and written at LuaObject.pas:296).
+
+--- `TSaveDialog`, built by `createSaveDialog`. Everything OpenDialog offers, with the
+--- dialog opened in save mode.
+---@class SaveDialog : OpenDialog
+
+--- `TSelectDirectoryDialog`, built by `createSelectDirectoryDialog`. Picks a directory
+--- rather than a file; `FileName` holds the chosen path.
+---@class SelectDirectoryDialog : OpenDialog
+
+--- `TColorDialog`.
+---
+--- The fields below are published properties of `TColorDialog`, reached through the
+--- `lua_getProperty` RTTI fallback `luaclass_index` installs at LuaClass.pas:578.
+---@class ColorDialog : CommonDialog
+---@field Color integer The colour the dialog opens on, and the colour the user picked once `execute()` has returned true. LCL published property of `TColorDialog` - the LCL is not vendored here; Cheat Engine documents it at celua.txt:1945, and lua_createColorDialog instantiates the class at LuaHandler.pas:14881.
+---@field CustomColors Strings The custom colour slots, one `'ColorX=hex'` line per slot.
+
+--- `TLuaCaller` (LuaCaller.pas). An opaque handle to a registered Lua callback; pass it
+--- back to the matching unregister function.
+---@class LuaCaller : Object
+---@field OnDestroy CECallback `function(luacaller)`, run from the destructor just before the handle is freed. Published property of `TLuaCaller`, reached through the RTTI fallback rather than a metatable entry.
+
+
+--- `TfrmLuaEngine` (frmluaengineunit.pas:25), the Lua engine window returned by
+--- `getLuaEngine()` and `createLuaEngine()`.
+---@class LuaEngineForm : CustomForm
+---@field mOutput Memo Read-only. The output memo the engine's `print` goes to. Not a published property - a form-designer component of `TfrmLuaEngine` (frmluaengineunit.pas:59, streamed by frmluaengineunit.lfm:26), reached by component name through the `component_findComponentByName` fallback in `luaclass_index` (LuaClass.pas:592).
+---@field mScript SynEdit Read-only. The script editor. Not a published property - a form-designer component of `TfrmLuaEngine` (frmluaengineunit.pas:63, streamed by frmluaengineunit.lfm:139), reached by component name through the same fallback.
+---@field cbShowOnPrint MenuItem Read-only. The View menu's `Show on "print"` item. While it is checked, `print()` raises the Lua engine window (LuaHandler.pas:384 and LuaHandler.pas:1521 both test `frmLuaEngine.cbShowOnPrint.checked` before calling `frmLuaEngine.show`); uncheck it to keep output going to the window without stealing focus. Not a published property - a form-designer component of `TfrmLuaEngine` (frmluaengineunit.pas:55, streamed by frmluaengineunit.lfm:831 with `AutoCheck = True` and `Checked = True`), reached by component name through the `component_findComponentByName` fallback `luaclass_index` runs after the published-property probe fails (LuaClass.pas:592, `c.FindComponent` at LuaComponent.pas:35).
+
+--- `TControlScrollBar`, the horizontal or vertical scroll bar of a scrolling window
+--- control such as a form or a scroll box. Not a class Cheat Engine registers - it has
+--- no metatable of its own, so it arrives with the metadata of the always-registered
+--- `TObject` (LuaObject.pas:511) and the fields below are its published properties,
+--- reached through the `lua_getProperty` / `lua_setProperty` RTTI fallbacks
+--- `luaclass_index` and `luaclass_newindex` install at LuaClass.pas:578 and
+--- LuaClass.pas:494. The LCL is not vendored here; documented by Cheat Engine at
+--- celua.txt:1109-1116.
+---@class ControlScrollBar : Object
+---@field Increment integer How far `Position` moves when a scrollbar arrow is clicked. Streamed as `HorzScrollBar.Increment = 1` at StructuresFrm2.lfm:80.
+---@field Page integer Slider size in pixels. Streamed as `HorzScrollBar.Page = 1` / `VertScrollBar.Page = 1` on the form itself at dbvmloadmanual.lfm:6-7; read back at disassemblerviewunit.pas:1039.
+---@field Smooth boolean Streamed as `HorzScrollBar.Smooth = True` at StructuresFrm2.lfm:82.
+---@field Position integer Current scroll offset, clamped to 0..(`Range` - `Page`) (celua.txt:1113).
+---@field Range integer Total scrollable extent. Cheat Engine assigns it on a `TCustomForm` descendant at IconStuff.pas:244 and on a scroll box at disassemblerviewunit.pas:1039.
+---@field Tracking boolean Fire scroll updates while the slider is dragged instead of only on release. Cheat Engine sets it at IconStuff.pas:246 and disassemblerviewunit.pas:1474.
+---@field Visible boolean Whether this scroll bar is shown. Streamed at StructuresFrm2.lfm:85 and formDifferentBitSizeUnit.lfm:6; Cheat Engine assigns it at disassemblerviewunit.pas:1034 and 1040.
+
+
+--- `TDisassemblerLine` (disassemblerviewlinesunit.pas:26), one rendered line of a
+--- `DisassemblerView`. Cheat Engine hands it to `DisassemblerView.OnExtraLineRender` as
+--- `sender` (disassemblerviewlinesunit.pas:405 and :409), pushed with `luaclass_newClass`
+--- at LuaCaller.pas:570. It is a bare `TObject` descendant that Cheat Engine never passes
+--- to `luaclass_register`, so it arrives with the metadata of the always-registered
+--- `TObject` (LuaObject.pas:511) and the fields below are its published properties
+--- (disassemblerviewlinesunit.pas:97-104), reached through the `lua_getProperty` RTTI
+--- fallback `luaclass_index` installs at LuaClass.pas:578. Documented by Cheat Engine at
+--- celua.txt:2524-2527.
+---@class DisassemblerViewLine : Object
+---@field Address integer Read-only. The address this line disassembles (disassemblerviewlinesunit.pas:102).
+---@field Owner DisassemblerView Read-only. The view that owns the line; `TDisassemblerview` passes itself as the owner (disassemblerviewunit.pas:940) and casts `fowner` back to `TDisassemblerview` at disassemblerviewlinesunit.pas:401. Declared `TObject` (disassemblerviewlinesunit.pas:103).
+---@field height integer Read-only. Rendered height of the line in pixels, including the extra images and custom headers (disassemblerviewlinesunit.pas:99).
+---@field top integer Read-only. Y position of the line inside the view (disassemblerviewlinesunit.pas:100).
+---@field defaultHeight integer Read-only. Height of the line without anything extra (disassemblerviewlinesunit.pas:101, set at disassemblerviewlinesunit.pas:523).
+
+--- `TSizeConstraints`, the minimum and maximum size a control or form may be resized
+--- to. Not a class Cheat Engine registers - it has no metatable of its own, so it
+--- arrives with the metadata of the always-registered `TObject` (LuaObject.pas:511)
+--- and the fields below are its published properties, reached through the
+--- `lua_getProperty` / `lua_setProperty` RTTI fallbacks `luaclass_index` and
+--- `luaclass_newindex` install at LuaClass.pas:578 and LuaClass.pas:494. The LCL is
+--- not vendored in this repository.
+---@class SizeConstraints : Object
+---@field MinWidth integer Smallest width the control may be sized to; 0 means no limit. Streamed as `Constraints.MinWidth = 240` on the form object declared at formhotkeyunit.lfm:1 (formhotkeyunit.lfm:12) and as `Constraints.MinWidth = 85` at CommentsUnit.lfm:43, which is only possible for a published property; Cheat Engine also assigns it on the form itself at HotKeys.pas:717.
+---@field MinHeight integer Smallest height the control may be sized to; 0 means no limit. Streamed as `Constraints.MinHeight = 25` at CommentsUnit.lfm:42; Cheat Engine assigns it on the form itself at HotKeys.pas:718 and formFoundcodeListExtraUnit.pas:222.
+---@field MaxWidth integer Largest width the control may be sized to; 0 means no limit. LCL published property of `TSizeConstraints` - the LCL is not vendored here and no .lfm in this repository streams it, but Cheat Engine assigns it at MainUnit.pas:8730 and formAddressChangeUnit.pas:1768.
+---@field MaxHeight integer Largest height the control may be sized to; 0 means no limit. LCL published property of `TSizeConstraints` - the LCL is not vendored here and no .lfm in this repository streams it, but Cheat Engine assigns it on the form itself at PasteTableentryFRM.pas:49 (inside `TfrmPasteTableentry.FormShow`, the form declared at PasteTableentryFRM.pas:15) and at formFoundcodeListExtraUnit.pas:221.

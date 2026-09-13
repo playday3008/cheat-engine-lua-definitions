@@ -1,0 +1,8 @@
+{
+  "name": "Cheat Engine",
+  "words": ["getAddress", "AOBScan", "createMemScan", "memoryrecord_"],
+  "files": ["cheattable%.xml", "%.CT$"],
+  "settings": {
+    "Lua.runtime.version": "Lua 5.3"
+  }
+}

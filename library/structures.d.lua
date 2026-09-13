@@ -1,0 +1,423 @@
+---@meta
+---
+--- structures
+---
+--- Shapes of the tables Cheat Engine builds and accepts.
+---
+--- Part of the Cheat Engine LuaLS definitions. Every file under `types/` shares one
+--- namespace, so declarations here may refer to types declared in any other file.
+
+---------------------------------------------------------------------------------------
+-- Structured table shapes
+---------------------------------------------------------------------------------------
+
+---@class ModuleEntry
+---@field Name string Module file name without path.
+---@field Address integer Module base address.
+---@field Is64Bit boolean
+---@field PathToFile string
+
+---@class MemoryRegion
+---@field BaseAddress integer
+---@field AllocationBase integer
+---@field AllocationProtect integer
+---@field RegionSize integer
+---@field State integer
+---@field Protect integer
+---@field Type integer
+
+---@class PageInfoCR3
+---@field BaseAddress integer
+---@field RegionSize integer
+---@field Protect integer
+
+---@class HandleEntry
+---@field ProcessID integer
+---@field ObjectTypeIndex integer
+---@field HandleAttributes integer
+---@field HandleValue integer
+---@field Object integer Kernel object address.
+---@field GrantedAccess integer
+
+---@class RegisteredSymbol
+---@field symbolname string
+---@field address integer
+---@field allocsize integer? Only present for allocated symbols.
+---@field processid integer? Only present for allocated symbols.
+---@field donotsave boolean? Only present when the symbol is not saved with the table.
+
+---@class MemoryProtectionFlags
+---@field R boolean? Readable. Defaults to false.
+---@field W boolean? Writable. Defaults to false.
+---@field X boolean? Executable. Defaults to false.
+
+---@class AllocEntry
+---@field address integer
+---@field size integer
+---@field prefered integer?
+
+--- Second return value of a successful enable run of `autoAssemble` - that is, of any
+--- call that does not pass a disableInfo table back in, `targetSelf` or not. Pass it
+--- back as `autoAssemble(script, disableInfo)` to run the disable part of the same
+--- script with the same allocations and symbols.
+---@class DisableInfo
+---@field allocs table<string, AllocEntry> Allocation name to allocation info.
+---@field registeredsymbols string[]
+---@field ccodesymbols SymbolListHandler? SymbolListHandler holding the {$ccode} symbols. Only present when the script registered at least one {$ccode} symbol.
+---@field exceptionlist integer[]
+---@field symbols table<string, integer> Symbol name to address.
+
+---@class CPUIDResult
+---@field EAX integer
+---@field EBX integer
+---@field ECX integer
+---@field EDX integer
+
+---@class FileVersion
+---@field major integer
+---@field minor integer
+---@field release integer
+---@field build integer
+
+---@class XBoxKeystroke
+---@field VirtualKey integer
+---@field Unicode integer
+---@field Flags integer
+---@field UserIndex integer
+---@field HidCode integer
+
+---@class XBoxControllerState
+---@field ControllerID integer
+---@field PacketNumber integer
+---@field GAMEPAD_DPAD_UP boolean
+---@field GAMEPAD_DPAD_DOWN boolean
+---@field GAMEPAD_DPAD_LEFT boolean
+---@field GAMEPAD_DPAD_RIGHT boolean
+---@field GAMEPAD_START boolean
+---@field GAMEPAD_BACK boolean
+---@field GAMEPAD_LEFT_THUMB boolean
+---@field GAMEPAD_RIGHT_THUMB boolean
+---@field GAMEPAD_LEFT_SHOULDER boolean
+---@field GAMEPAD_RIGHT_SHOULDER boolean
+---@field GAMEPAD_A boolean
+---@field GAMEPAD_B boolean
+---@field GAMEPAD_X boolean
+---@field GAMEPAD_Y boolean
+---@field wButtons integer
+---@field LeftTrigger integer
+---@field RightTrigger integer
+---@field ThumbLeftX integer
+---@field ThumbLeftY integer
+---@field ThumbRightX integer
+---@field ThumbRightY integer
+
+---@class FXSAVE64
+---@field FCW integer
+---@field FSW integer
+---@field FTW integer
+---@field FOP integer
+---@field IP integer
+---@field DP integer
+---@field MXCSR integer
+---@field MXCSR_MASK integer
+---@field FP_MM0 ByteTable
+---@field FP_MM1 ByteTable
+---@field FP_MM2 ByteTable
+---@field FP_MM3 ByteTable
+---@field FP_MM4 ByteTable
+---@field FP_MM5 ByteTable
+---@field FP_MM6 ByteTable
+---@field FP_MM7 ByteTable
+---@field XMM0 ByteTable
+---@field XMM1 ByteTable
+---@field XMM2 ByteTable
+---@field XMM3 ByteTable
+---@field XMM4 ByteTable
+---@field XMM5 ByteTable
+---@field XMM6 ByteTable
+---@field XMM7 ByteTable
+---@field XMM8 ByteTable
+---@field XMM9 ByteTable
+---@field XMM10 ByteTable
+---@field XMM11 ByteTable
+---@field XMM12 ByteTable
+---@field XMM13 ByteTable
+---@field XMM14 ByteTable
+---@field XMM15 ByteTable
+
+--- One entry of a DBVM watch/trace log.
+---@class PageEvent
+---@field VirtualAddress integer
+---@field PhysicalAddress integer
+---@field CR3 integer
+---@field FSBASE integer
+---@field GSBASE integer
+---@field GSBASE_KERNEL integer
+---@field FLAGS integer
+---@field RAX integer
+---@field RBX integer
+---@field RCX integer
+---@field RDX integer
+---@field RSI integer
+---@field RDI integer
+---@field R8 integer
+---@field R9 integer
+---@field R10 integer
+---@field R11 integer
+---@field R12 integer
+---@field R13 integer
+---@field R14 integer
+---@field R15 integer
+---@field RBP integer
+---@field RSP integer
+---@field RIP integer
+---@field DR0 integer
+---@field DR1 integer
+---@field DR2 integer
+---@field DR3 integer
+---@field DR6 integer
+---@field DR7 integer
+---@field CS integer
+---@field DS integer
+---@field ES integer
+---@field SS integer
+---@field FS integer
+---@field GS integer
+---@field Count integer? Number of times this event was hit. Absent on a `dbvm_bp_getBrokenThreadEventFull` table, which sets the key to nil and moves the value into `Heartbeat` (LuaHandler.pas:7345).
+---@field FXSAVE64 FXSAVE64? Present when the watch was created with EPTO_SAVE_FXSAVE.
+---@field Stack ByteTable? 4096 byte snapshot, present with EPTO_SAVE_STACK.
+---@field Status integer? Only on a `dbvm_bp_getBrokenThreadEventFull` table (LuaHandler.pas:7353).
+---@field WatchID integer? Only on a `dbvm_bp_getBrokenThreadEventFull` table (LuaHandler.pas:7357).
+---@field Heartbeat integer? Only on a `dbvm_bp_getBrokenThreadEventFull` table; holds what `Count` would have been (LuaHandler.pas:7349).
+
+---@class DBVMWatchLogData
+---@field physicalAddress integer
+---@field initialID integer
+---@field actualID integer
+---@field rip integer
+---@field data integer
+---@field cacheIssue integer
+---@field skipped integer
+
+---@class DBVMWatchStatus
+---@field last DBVMWatchLogData
+---@field best DBVMWatchLogData
+
+---@class DBVMBrokenThreadShortState
+---@field WatchID integer
+---@field Status integer
+---@field CS integer
+---@field RIP integer
+---@field CR3 integer
+---@field FSBASE integer
+---@field GSBASE integer
+---@field GSBASE_KERNEL integer
+---@field Heartbeat integer
+
+---@class DBVMStatistics
+---@field Local table<integer, integer> Event counters of the current CPU, indices 0-55.
+---@field Global table<integer, integer> Event counters of all CPUs, indices 0-55.
+
+---@class UltimapDebugInfo
+---@field Active integer
+---@field CR3 integer
+---@field DEBUGCTL integer
+---@field DS_AREA integer
+---@field OriginalDebugCTL integer
+---@field OriginalDS_AREA integer
+---@field CR3_switchcount integer
+---@field CR3_switchcount2 integer
+---@field LastOldCR3 integer
+---@field LastNewCR3 integer
+---@field cpunr integer
+
+--- Flag and register overrides for `dbvm_changeregonbp`. A field that is left out is
+--- not changed.
+---@class ChangeRegOnBPInfo
+---@field newCF integer?
+---@field newPF integer?
+---@field newAF integer?
+---@field newZF integer?
+---@field newSF integer?
+---@field newOF integer?
+---@field newRAX integer?
+---@field newRBX integer?
+---@field newRCX integer?
+---@field newRDX integer?
+---@field newRSI integer?
+---@field newRDI integer?
+---@field newRBP integer?
+---@field newRSP integer?
+---@field newRIP integer?
+---@field newR8 integer?
+---@field newR9 integer?
+---@field newR10 integer?
+---@field newR11 integer?
+---@field newR12 integer?
+---@field newR13 integer?
+---@field newR14 integer?
+---@field newR15 integer?
+
+---@class TraceOnBPOptions
+---@field logFPU boolean? Include the FPU/SSE state in each log entry.
+---@field logStack boolean? Include a stack snapshot in each log entry.
+
+--- Parameter descriptor for `createExecuteMethodStub` / `createExecuteCodeExStub`.
+---@class StubParameter
+---@field type ExecuteParamType? Defaults to 5 (bytetable) when left out.
+---@field size integer? Byte count, only meaningful for type 5.
+---@field isInputOnly boolean? Broken in Cheat Engine: `LuaHandler.pas:11211` stores this into `IsOutputOnly`, so it behaves like `isOutputOnly`. The separate `IsInputOnly` variable is only ever cleared (LuaHandler.pas:11178), so its bit at LuaHandler.pas:11315 is never set.
+---@field isOutputOnly boolean?
+
+--- Parameter descriptor for `executeCodeEx` / `executeMethod` / `executeCodeLocalEx`.
+--- The array form `{type, value}` is accepted as well.
+---@class ExecuteParameter
+---@field type ExecuteParamType? Required unless given as integer key 1.
+---@field [1] ExecuteParamType? Read in place of `type` when that key is absent (LuaHandler.pas:11635-11645); the call fails with "Invalid parametertype" when neither is present.
+---@field value (number|string)? Required unless given as integer key 2.
+---@field [2] (number|string)? Read in place of `value` when that key is absent (LuaHandler.pas:11652-11662); the call fails with "Invalid parametervalue" when neither is present.
+
+---@class ExecuteMethodStub
+---@field StubAddress integer Address of the generated stub.
+---@field Parameters integer[] Encoded parameter types, in call order.
+
+--- Instance descriptor for `executeMethod`. The array form `{regnr, classinstance}`
+--- is accepted as well.
+---@class MethodInstance
+---@field regnr InstanceRegister? Defaults to 1 (rcx/ecx).
+---@field [1] InstanceRegister? Read in place of `regnr` when that key is absent (LuaHandler.pas:11550-11559).
+---@field classinstance integer? The `this` pointer. Required unless given as integer key 2.
+---@field [2] integer? Read in place of `classinstance` when that key is absent (LuaHandler.pas:11568-11578); the call fails with "Invalid instance" when neither is present.
+
+--- Table passed to `registerBinUtil`.
+---@class BinUtilDefinition
+---@field Name string? Menu entry name. Defaults to "No name".
+---@field Description string?
+---@field Path string? Folder holding the binutils executables.
+---@field Prefix string? Executable name prefix, e.g. "arm-none-eabi-".
+---@field Architecture string?
+---@field ASParam string? Extra parameters for the assembler.
+---@field LDParam string? Extra parameters for the linker.
+---@field OBJDUMPParam string? Extra parameters for objdump.
+---@field DisassemblerCommentChar string?
+---@field OnDisassemble (fun(address: integer): string?)? Extra objdump parameters for this address. Called as `f(address)` with the address being disassembled and asked for one result; the string is split on spaces and every word is appended to the objdump command line (binutils.pas:322-329). A failed call, or a nil result, adds nothing. Must be a function: the value is stored with `luaL_ref` (LuaHandler.pas:10814) and later fetched with `lua_rawgeti` and called directly (binutils.pas:322-324), so a routine name does not work here.
+
+--- Rectangle table. `lua_pushrect` builds one with exactly these four keys, and
+--- `lua_toRect` reads them back; a key that is absent reads as 0.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaHandler.pas#L463
+---@class Rect
+---@field Left integer
+---@field Top integer
+---@field Right integer
+---@field Bottom integer
+
+--- Point table. `lua_pushpoint` writes `x` and `y`; `lua_toPoint` reads `x`, falling back
+--- to element 1 when the key is absent. The `y` fallback reads element 1 as well
+--- (`lua_pushinteger(L,1)` at LuaHandler.pas:511), so an array-style `{a, b}` yields
+--- `x == y == a` and the second element is ignored. Pass the named keys.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaHandler.pas#L520
+---@class Point
+---@field x integer
+---@field y integer
+
+--- Thread context table, as built by `lua_pushcontext`. Which register fields are present
+--- depends on the build and on the target: the R* fields exist on the 64-bit build, and
+--- the E* fields are filled in only when the target is 32-bit. XMM8..XMM15 are present
+--- only for a 64-bit target.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaHandler.pas#L964
+---@class Context
+---@field ContextFlags integer
+---@field CS integer
+---@field DS integer
+---@field ES integer
+---@field FS integer
+---@field GS integer
+---@field SS integer
+---@field EFlags integer
+---@field RAX integer?
+---@field RBX integer?
+---@field RCX integer?
+---@field RDX integer?
+---@field RSI integer?
+---@field RDI integer?
+---@field RBP integer?
+---@field RSP integer?
+---@field RIP integer?
+---@field R8 integer?
+---@field R9 integer?
+---@field R10 integer?
+---@field R11 integer?
+---@field R12 integer?
+---@field R13 integer?
+---@field R14 integer?
+---@field R15 integer?
+---@field EAX integer?
+---@field EBX integer?
+---@field ECX integer?
+---@field EDX integer?
+---@field ESI integer?
+---@field EDI integer?
+---@field EBP integer?
+---@field ESP integer?
+---@field EIP integer?
+---@field DR0 integer
+---@field DR1 integer
+---@field DR2 integer
+---@field DR3 integer
+---@field DR6 integer
+---@field DR7 integer
+---@field FP0 ByteTable
+---@field FP1 ByteTable
+---@field FP2 ByteTable
+---@field FP3 ByteTable
+---@field FP4 ByteTable
+---@field FP5 ByteTable
+---@field FP6 ByteTable
+---@field FP7 ByteTable
+---@field XMM0 ByteTable
+---@field XMM1 ByteTable
+---@field XMM2 ByteTable
+---@field XMM3 ByteTable
+---@field XMM4 ByteTable
+---@field XMM5 ByteTable
+---@field XMM6 ByteTable
+---@field XMM7 ByteTable
+---@field XMM8 ByteTable?
+---@field XMM9 ByteTable?
+---@field XMM10 ByteTable?
+---@field XMM11 ByteTable?
+---@field XMM12 ByteTable?
+---@field XMM13 ByteTable?
+---@field XMM14 ByteTable?
+---@field XMM15 ByteTable?
+
+--- Where a link attaches to a diagram block. `lua_pushDiagramBlockSideDescriptor`
+--- (luadiagram.pas:20) builds one with all three keys set; when one is passed in, every key
+--- is optional and defaults (luadiagram.pas:44-46). Where a descriptor is accepted as an
+--- argument a bare `DiagramBlock` is accepted too.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/luadiagram.pas#L20
+---@class DiagramBlockSideDescriptor
+---@field Block DiagramBlock? The block the link attaches to. Always set on a descriptor Cheat Engine builds; when passing one in it may be given as integer key 1 instead.
+---@field [1] DiagramBlock? Read in place of `Block` when the `Block` key is absent (luadiagram.pas:61-65), so `{block}` is a valid descriptor.
+---@field Side (integer|string)? A `dbs*` constant. Reading a descriptor always yields the integer; when one is passed in, the `TDiagramBlockSide` member name (e.g. `'dbsLeft'`) is accepted too. Defaults to `dbsTop` when absent (luadiagram.pas:45).
+---@field Position integer? Offset along that side. Defaults to 0 when absent: `lua_toDiagramBlockSideDescriptor` seeds the record with 0 (luadiagram.pas:46) and reads the key with `lua_tointeger`, which yields 0 for a missing key (luadiagram.pas:85).
+
+--- Instance descriptor for `createExecuteMethodStub`. Only the register selection is read
+--- here, unlike `MethodInstance`; the array form `{regnr}` is accepted as well.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaHandler.pas#L11094
+---@class StubInstance
+---@field regnr InstanceRegister? Defaults to 1 (rcx/ecx).
+---@field [1] InstanceRegister? Read in place of `regnr` when that key is absent (LuaHandler.pas:11102-11111); falls back to 1 when neither is present.
+
+--- One entry of the log `WriteLog:getLog()` returns.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/frmedithistoryunit.pas#L453
+---@class WriteLogEntry
+---@field address integer
+---@field original ByteTable Bytes that were there before the write.
+---@field new ByteTable Bytes that were written.
+
+--- One level of the parent chain `StructureForm:getSelectedStructElement()` returns.
+---@source https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaStructureFrm.pas#L173
+---@class StructParentEntry
+---@field struct Structure
+---@field element StructureElement

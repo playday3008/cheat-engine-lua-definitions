@@ -1,0 +1,60 @@
+---@meta cheatengine
+---
+--- LuaLS definitions for the Lua API that Cheat Engine's `LuaHandler` unit registers
+--- into the global state.
+---
+--- Generated from
+--- <https://github.com/cheat-engine/cheat-engine/blob/ec45d5f47f92a239ba0bf51ec5d04a7509c3fd37/Cheat%20Engine/LuaHandler.pas>
+---
+--- Scope: everything Cheat Engine itself puts in the global state.
+---   * the functions registered from `LuaHandler.pas` and from the other `Lua*.pas`
+---     units, including the constructors (`createThread`, `createForm`, ...)
+---   * the classes those units build, with their methods and properties, and the
+---     pre-6.3 flat `<class>_<method>` spelling of every method
+---   * the constants `bin/defines.lua` defines, since `main.lua` requires it at startup
+---   * the objects and variables Cheat Engine assigns (`MainForm`, `process`, ...) and
+---     the callbacks it looks up by name (`debugger_onBreakpoint`, `onOpenProcess`, ...)
+---
+--- Not covered: the scripts in `bin/autorun` (`monoscript.lua`'s `mono_*` API, `java.lua`,
+--- ...). Those are Lua, so pointing `workspace.library` at that folder types them from
+--- the real source instead of from a stub. Neither is `bin/classwrapper.lua`, which only
+--- exists after an explicit `require`.
+---
+--- Case note: `LuaHandler.lua_register` registers every name twice - once as written and
+--- once with the case of the first character flipped, so `openProcess` also answers to
+--- `OpenProcess` and `AOBScan` also answers to `aOBScan`.
+--- Only the spelling Cheat Engine passes to `lua_register` is declared here, since that is
+--- what its own scripts and documentation use. The flipped twin still works at runtime, it
+--- is simply not offered by completion. Four names are registered with an uppercase first
+--- letter - `AOBScan`, `AOBScanUnique`, `AOBScanModuleUnique` and `UTF8ToAnsi` - so it is
+--- their lowercase-first twins (`aOBScan`, `uTF8ToAnsi`, ...) that go undeclared.
+---
+--- `UTF8ToAnsi` is not a product of that flip. The override only xors character 1
+--- (LuaHandler.pas:226), so the automatic twin of `utf8ToAnsi` is `Utf8ToAnsi`. `UTF8ToAnsi`
+--- is its own explicit `lua_register` call on the next line, which is why both spellings
+--- are declared.
+---
+--- Names that appear twice in `types/aliases-spelling.d.lua` are a different thing: those
+--- are separate explicit `lua_register` calls (`getProcesslist`, `waitforPDB`, ...), not
+--- products of the case flip.
+---
+--- Layout: the declarations are split across the files under `types/`, grouped by the
+--- part of the API they cover. LuaLS loads every file in a `workspace.library` directory
+--- into one shared namespace, so the files never reference each other - a `---@return
+--- MemScan` in one file resolves against the `---@class MemScan` in another.
+---
+--- Setup: point LuaLS at the directory in `.luarc.json`, so the globals are typed without
+--- `undefined-global` having to be switched off anywhere:
+---
+---     {
+---       "workspace.library": ["./types"],
+---       "type.checkTableShape": true,
+---       "type.weakNilCheck": false,
+---       "type.weakUnionCheck": false
+---     }
+---
+--- The `---@meta` tag at the top of each file is what marks it definitions-only.
+---
+--- Address note: every parameter typed `CEAddress` goes through `lua_toaddress`, so a
+--- number, or a string that the symbol handler can resolve ("game.exe+1F4", "[esi+8]"),
+--- are both accepted.
