@@ -1,0 +1,51 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  luals:
+    name: lua-language-server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install lua-language-server
+        run: |
+          VERSION=3.19.1
+          curl -fsSL -o lls.tar.gz \
+            "https://github.com/LuaLS/lua-language-server/releases/download/${VERSION}/lua-language-server-${VERSION}-linux-x64.tar.gz"
+          mkdir -p "$RUNNER_TEMP/lls"
+          tar -xzf lls.tar.gz -C "$RUNNER_TEMP/lls"
+          echo "$RUNNER_TEMP/lls/bin" >> "$GITHUB_PATH"
+
+      - name: Check the definitions
+        run: |
+          lua-language-server --check "$PWD/library" \
+            --checklevel=Information --logpath="$RUNNER_TEMP/lls-log"
+          # --check exits 0 even when it finds problems, so read the report
+          if [ -s "$RUNNER_TEMP/lls-log/check.json" ] &&
+             [ "$(jq 'length' "$RUNNER_TEMP/lls-log/check.json")" != "0" ]; then
+            echo "::error::lua-language-server reported diagnostics"
+            jq . "$RUNNER_TEMP/lls-log/check.json"
+            exit 1
+          fi
+          echo "no diagnostics"
+
+  syntax:
+    name: luac -p
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y lua5.3
+      - run: find library -name '*.lua' -exec luac5.3 -p {} +
+
+  integrity:
+    name: integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 .github/integrity.py

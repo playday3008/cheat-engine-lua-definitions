@@ -1,5 +1,7 @@
 # Cheat Engine Lua API definitions
 
+[![check](https://github.com/playday3008/cheat-engine-lua-definitions/actions/workflows/check.yml/badge.svg)](https://github.com/playday3008/cheat-engine-lua-definitions/actions/workflows/check.yml)
+
 LuaLS type definitions for the Lua API [Cheat Engine](https://github.com/cheat-engine/cheat-engine)
 exposes to table scripts, autorun scripts and the Lua engine window.
 
